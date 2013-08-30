@@ -21,11 +21,7 @@ webot.set('subscribe', {
 webot.watch(app, { token: security.token , path: security.path });
 
 
-// 启动 Web 服务
-// 微信后台只允许 80 端口
-app.listen(3000);
-
 // 如果你不想让 node 应用直接监听 80 端口
 // 可以尝试用 nginx 或 apache 自己做一层 proxy
-app.listen(process.env.PORT);
+app.listen(security.port);
 app.enable('trust proxy');
