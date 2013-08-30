@@ -1,0 +1,32 @@
+{
+  "name": "hnxsmama-webot",
+  "version": "0.1.0",
+  "homepage": "http:/www.hnxsmama.com/webot/",
+  "description": "星沙妈妈网微信机器人",
+  "private": true,
+  "contributors": [
+    "xsmama <xsmama@hnxsmama.com> (http://elthon.github.com)"
+  ],
+  "dependencies": {
+    "debug": "~0.7.2",
+    "request": "~2.12",
+    "iconv": ">= 1.2.4",
+    "opencc": "~0.4.1",
+    "express": "~3.0",
+    "xml2js": "~0.2.6",
+    "jade": "~0.27.7",
+    "js-yaml": "~2.0.3",
+    "weixin-robot": "~0.4.1"
+  },
+  "devDependencies": {
+    "prettyjson": "*",
+    "commander": "*",
+    "mocha": "*",
+    "should": "*",
+    "color": "*"
+  },
+  "engines": {
+    "node" : ">=0.6.0",
+    "npm" : ">=1.1.6"
+  }
+}

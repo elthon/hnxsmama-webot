@@ -1,2 +1,5 @@
 webot.sublime-project
 webot.sublime-workspace
+node_modules
+security.js
+npm-debug.log
