@@ -17,6 +17,23 @@ webot.set('subscribe', {
   }
 });
 
+webot.set({
+  '/hi/i': 'Hello',
+  '/who (are|r) (you|u)/i': 'I\'m a robot.'
+});
+
+webot.set('Blur match', {
+  pattern: '是机器人',
+  handler: '是的，我就是一名光荣的机器人'
+});
+
+// 当字符串 pattern 以 "=" 开头时，需要完全匹配
+webot.set('Exact match', {
+  pattern: '=a',
+  handler: '只有回复「a」时才会看到本消息'
+});
+
+
 // 接管消息请求
 webot.watch(app, { token: security.token , path: security.path });
 
