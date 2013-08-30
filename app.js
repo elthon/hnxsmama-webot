@@ -7,6 +7,8 @@ var log = debug('webot-example:log');
 var verbose = debug('webot-example:verbose');
 var error = debug('webot-example:error');
 
+var request = require('request');
+
 var app = express();
 
 // 指定回复消息
