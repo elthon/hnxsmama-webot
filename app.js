@@ -2,6 +2,10 @@ var express = require('express');
 var webot = require('weixin-robot');
 var security = require('./security.js');
 
+var debug = require('debug');
+var log = debug('webot-example:log');
+var verbose = debug('webot-example:verbose');
+var error = debug('webot-example:error');
 
 var app = express();
 
@@ -109,7 +113,7 @@ var search = function(keyword, cb){
     //handler也可以是异步的
     handler: do_search
   });
-  
+
 // 接管消息请求
 webot.watch(app, { token: security.token , path: security.path });
 
