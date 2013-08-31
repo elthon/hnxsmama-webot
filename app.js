@@ -9,6 +9,8 @@ var error = debug('webot-example:error');
 
 var request = require('request');
 
+var _ = require("underscore");
+
 var app = express();
 
 // 指定回复消息
@@ -39,6 +41,16 @@ webot.set('Exact match', {
   handler: '只有回复「a」时才会看到本消息'
 });
 
+var StringBuffer = function(){
+  this.buffer = new Array();
+}
+StringBuffer.prototype.append = function(element){
+  this.buffer.push(element);
+}
+StringBuffer.prototype.toString()=function(){
+  return this.buffer.join("");
+}
+
 
 /**
  * 搜索百度
@@ -48,41 +60,33 @@ webot.set('Exact match', {
  * @param  {Error}    cb.err        错误信息
  * @param  {String}   cb.result     查询结果
  */
-var search = function(keyword, cb){
+var search = function(keyword, cb) {
   log('searching: %s', keyword);
   var options = {
-    url: 'http://www.baidu.com/s',
+    url: 'http://news.baidu.com/n',
     qs: {
-      wd: keyword
+      "m": "rddata",
+      "v": "hot_word",
+      "type": "0",
+      "date": 20130830
     }
   };
-  request.get(options, function(err, res, body){
-    if (err || !body){
-      return cb(null, '现在暂时无法搜索，待会儿再来好吗？');
+  request.get(options, function(err, res, body) {
+    if (err || !body) {
+      return cb(null, '现在暂时无热点信息，待会儿再来好吗？');
     }
-    var regex = /<h3 class="t">\s*(<a.*?>.*?<\/a>).*?<\/h3>/gi;
-    var links = [];
-    var i = 1;
+   
+    var data = body.data;
 
-    while (true) {
-      var m = regex.exec(body);
-      if (!m || i > 5) break;
-      links.push(i + '. ' + m[1]);
-      i++;
-    }
+    var result = new StringBuffer();
+    _.each(data, function(hot){
 
-    var result;
-    if (links.length) {
-      result = '在百度搜索:' + keyword +',得到以下结果：\n' + links.join('\n');
-      result = result.replace(/\s*data-click=".*?"/gi,  '');
-      result = result.replace(/\s*onclick=".*?"/gi,  '');
-      result = result.replace(/\s*target=".*?"/gi,  '');
-      result = result.replace(/<em>(.*?)<\/em>/gi,  '$1');
-      result = result.replace(/<font.*?>(.*?)<\/font>/gi,  '$1');
-      result = result.replace(/<span.*?>(.*?)<\/span>/gi,  '$1');
-    } else {
-      result = '搜不到任何结果呢';
-    }
+
+      result.append("<a href='http://news.baidu.com/ns?word="+hot.title+"'>")
+      result.append(hot.title);
+      result.append("</a>");
+
+    });
 
     // result 会直接作为
     // robot.reply() 的返回值
@@ -100,24 +104,27 @@ var search = function(keyword, cb){
   });
 };
 
-  function do_search(info, next){
-    // pattern的解析结果将放在param里
-    var q = info.param[1];
-    log('searching: ', q);
-    // 从某个地方搜索到数据...
-    return search(q , next);
-  }
+function do_search(info, next) {
+  // pattern的解析结果将放在param里
+  var q = info.param[1];
+  log('searching: ', q);
+  // 从某个地方搜索到数据...
+  return search(q, next);
+}
 
-  // 可以通过回调返回结果
-  webot.set('search', {
-    description: '发送: s 关键词 ',
-    pattern: /^(?:搜索?|search|百度|s\b)\s*(.+)/i,
-    //handler也可以是异步的
-    handler: do_search
-  });
+// 可以通过回调返回结果
+webot.set('search', {
+  description: '发送: s 关键词 ',
+  pattern: /^(?:搜索?|search|百度|s\b)\s*(.+)/i,
+  //handler也可以是异步的
+  handler: do_search
+});
 
 // 接管消息请求
-webot.watch(app, { token: security.token , path: security.path });
+webot.watch(app, {
+  token: security.token,
+  path: security.path
+});
 
 
 // 如果你不想让 node 应用直接监听 80 端口
