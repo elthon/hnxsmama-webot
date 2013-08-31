@@ -44,10 +44,12 @@ webot.set('Exact match', {
 var StringBuffer = function(){
   this.buffer = new Array();
 }
+
 StringBuffer.prototype.append = function(element){
   this.buffer.push(element);
 }
-StringBuffer.prototype.toString()=function(){
+
+StringBuffer.prototype.toString = function(){
   return this.buffer.join("");
 }
 
